@@ -9,6 +9,8 @@ Token Lexer::getNextToken() {
 		lastCharacter = characterStream -> get();
 	}
 
+	// probably need to check here if we've reached end of file for EOF token
+
 	switch (lastCharacter) {
 		case '=': return Token(TokenType::equals, "");
 		case '+': return Token(TokenType::plus, "");
