@@ -1,4 +1,4 @@
-#include "helloWorld.h"
+#include "../include/lua-compiler/helloWorld.h"
 #include <iostream>
 #include <string>
 
@@ -8,10 +8,5 @@ void sayHello() {
 
 std::string makeString() {
 	return std::string("Hello, World!");
-}
-
-int main() {
-	sayHello();
-	return 0;
 }
 

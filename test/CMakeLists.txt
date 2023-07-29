@@ -6,7 +6,7 @@ set_target_properties(gmock_main PROPERTIES FOLDER extern)
 
 macro(add_test TEST_NAME)
 	add_executable(${TEST_NAME} ${ARGN})
-	target_link_libraries(${TEST_NAME} gtest gmock gtest_main)
+	target_link_libraries(${TEST_NAME} gtest gmock gtest_main lua-compiler)
 	gtest_discover_tests(${TEST_NAME} WORKING_DIRECTORY ${PROJECT_DIR})
 	set_target_properties(${TEST_NAME} PROPERTIES FOLDER test)
 endmacro()

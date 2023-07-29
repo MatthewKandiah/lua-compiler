@@ -4,10 +4,10 @@
 
 TEST(TestTests, TestThatPasses) {
 	auto x = makeString();
-	EXPECT_EQ(1, 1);
+	EXPECT_EQ(x, "Hello, World!");
 }	
 
 TEST(TestTests, TestThatFails) {
 	auto y = makeString();
-	EXPECT_EQ(1,2);
+	EXPECT_EQ(y,"Goodbye, Loser!");
 }

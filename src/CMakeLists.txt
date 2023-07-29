@@ -1,4 +1,4 @@
-target_sources(lua-compiler PRIVATE
+target_sources(lua-compiler PUBLIC
 	helloWorld.cpp
 )
 
