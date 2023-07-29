@@ -10,10 +10,10 @@ target_include_directories(lua-compiler PRIVATE
 add_subdirectory(src)
 
 # set up test building
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	include(CTest)
-endif()
-if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+option(BUILD_TESTS "Build the tests" ON)
+if (BUILD_TESTS)
+	enable_testing()
+	include(GoogleTest)
 	add_subdirectory(test)
 endif()
 
