@@ -4,7 +4,7 @@
 #include <sstream>
 
 TEST(LexerTests, ShouldReturnEqualsToken) {
-	std::istringstream inputStream('=');
+	std::istringstream inputStream {"="};
 	Lexer lexer(&inputStream);
 
 	auto result = lexer.getNextToken();
