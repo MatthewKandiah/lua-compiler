@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include <iostream>
-#include "../include/lua-compiler/helloWorld.h"
+#include "../src/helloWorld.h"
 
 TEST(TestTests, TestThatPasses) {
 	auto x = makeString();
@@ -8,6 +8,6 @@ TEST(TestTests, TestThatPasses) {
 }	
 
 TEST(TestTests, TestThatFails) {
-	auto y = makeString();
-	EXPECT_EQ(y,"Goodbye, Loser!");
+	auto x = makeString();
+	EXPECT_EQ(x,"Goodbye, Loser!");
 }

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/lua-compiler/helloWorld.h"
+#include "../src/helloWorld.h"
 int main() {
 	std::cout << makeString();
 }

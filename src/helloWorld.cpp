@@ -1,4 +1,4 @@
-#include "../include/lua-compiler/helloWorld.h"
+#include "helloWorld.h"
 #include <iostream>
 #include <string>
 

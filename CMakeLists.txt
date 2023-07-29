@@ -5,9 +5,6 @@ project(lua-compiler VERSION 0.1)
 
 # set up library
 add_library(lua-compiler STATIC)
-target_include_directories(lua-compiler PRIVATE
-	include/lua-compiler
-)
 add_subdirectory(src)
 
 # set up executable for manual testing
