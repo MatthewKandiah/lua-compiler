@@ -48,6 +48,15 @@ TEST(LexerTests, ShouldReturnRightBracketToken) {
 	EXPECT_EQ(result.type, TokenType::rightBracket);
 }
 
+TEST(LexerTests, ShouldSkipOverInitialWhitespace) {
+	std::istringstream inputStream {"   )"};
+	Lexer lexer(&inputStream);
+
+	auto result = lexer.getNextToken();
+
+	EXPECT_EQ(result.type, TokenType::rightBracket);
+}
+
 TEST(LexerTests, ShouldConsumeTokensAsTheyAreRead) {
 	std::istringstream inputStream {"=+-()"};
 	Lexer lexer(&inputStream);
