@@ -1,9 +1,13 @@
 #include "gtest/gtest.h"
+#include <iostream>
+#include "../include/lua-compiler/helloWorld.h"
 
 TEST(TestTests, TestThatPasses) {
+	auto x = makeString();
 	EXPECT_EQ(1, 1);
 }	
 
 TEST(TestTests, TestThatFails) {
-	EXPECT_EQ(1, 2);
+	auto y = makeString();
+	EXPECT_EQ(1,2);
 }
