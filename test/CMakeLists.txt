@@ -11,5 +11,5 @@ macro(add_test TEST_NAME)
 	set_target_properties(${TEST_NAME} PROPERTIES FOLDER test)
 endmacro()
 
-add_test(helloWorld helloWorld.test.cpp)
+add_test(lexer lexer.test.cpp)
 
