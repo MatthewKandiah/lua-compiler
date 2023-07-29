@@ -7,7 +7,6 @@ Token Lexer::getNextToken() {
 	// skips whitespace
 	while (std::isspace(lastCharacter)) {
 		lastCharacter = characterStream -> get();
-		std::printf("%s", &lastCharacter);
 
 		switch (lastCharacter) {
 			case '=': return Token(TokenType::equals, "");
