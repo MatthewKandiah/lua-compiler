@@ -5,11 +5,11 @@
 #include "token.h"
 
 class Lexer {
- public:
-  Token getNextToken(std::istream&);
+public:
+  Token getNextToken(std::istream &);
 
- private:
+private:
   char lastCharacter{' '};
 };
 
-#endif  // !LEXER_H
+#endif // !LEXER_H

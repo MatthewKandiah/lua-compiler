@@ -6,8 +6,8 @@
 #include "tokenType.h"
 
 class Token {
- public:
-  Token(TokenType t, const std::string& v) : type{t}, value{std::move(v)} {}
+public:
+  Token(TokenType t, const std::string &v) : type{t}, value{std::move(v)} {}
 
   TokenType type;
   std::string value;

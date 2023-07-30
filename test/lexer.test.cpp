@@ -99,7 +99,7 @@ TEST(LexerTests, ShouldHandleLocalKeyword) {
 
 TEST(LexerTests, ShouldHandleLocalKeywordAndIdentifiers) {
   std::istringstream inputStream("a local b local local c d local");
-  std::vector<Token> results {};
+  std::vector<Token> results{};
   while (inputStream) {
     results.push_back(Lexer().getNextToken(inputStream));
   }
@@ -141,4 +141,3 @@ TEST(LexerTests, ShouldHandleMultipleIntegers) {
   EXPECT_EQ(result3.value, "456");
   EXPECT_EQ(result4.value, "7890");
 }
-

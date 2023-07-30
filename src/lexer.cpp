@@ -4,7 +4,7 @@
 #include <istream>
 #include <string>
 
-Token Lexer::getNextToken(std::istream& characterStream) {
+Token Lexer::getNextToken(std::istream &characterStream) {
   while (std::isspace(lastCharacter)) {
     lastCharacter = characterStream.get();
   }
@@ -14,20 +14,20 @@ Token Lexer::getNextToken(std::istream& characterStream) {
   }
 
   switch (lastCharacter) {
-    case '=':
-      return Token(TokenType::equals, "");
-    case '+':
-      return Token(TokenType::plus, "");
-    case '-':
-      return Token(TokenType::minus, "");
-    case '(':
-      return Token(TokenType::leftBracket, "");
-    case ')':
-      return Token(TokenType::rightBracket, "");
+  case '=':
+    return Token(TokenType::equals, "");
+  case '+':
+    return Token(TokenType::plus, "");
+  case '-':
+    return Token(TokenType::minus, "");
+  case '(':
+    return Token(TokenType::leftBracket, "");
+  case ')':
+    return Token(TokenType::rightBracket, "");
   }
 
   if (std::isalpha(lastCharacter)) {
-    std::string buffer {lastCharacter};
+    std::string buffer{lastCharacter};
     lastCharacter = characterStream.get();
     while (std::isalnum(lastCharacter)) {
       buffer.push_back(lastCharacter);
@@ -42,7 +42,7 @@ Token Lexer::getNextToken(std::istream& characterStream) {
   }
 
   if (std::isdigit(lastCharacter)) {
-    std::string buffer {lastCharacter};
+    std::string buffer{lastCharacter};
     lastCharacter = characterStream.get();
     while (std::isdigit(lastCharacter)) {
       buffer.push_back(lastCharacter);
