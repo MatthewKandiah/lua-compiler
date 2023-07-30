@@ -60,3 +60,8 @@ TEST(LexerTests, ShouldHandleAllWhitespaceInput) {
   EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::eof);
 }
 
+TEST(LexerTests, ShouldHandleIllegalToken) {
+  std::istringstream inputStream("Š");
+  EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::illegal);
+}
+
