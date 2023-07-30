@@ -10,15 +10,17 @@
 
 class Parser {
  public:
-  Parser(Lexer l) : lexer{l}, currentToken{Token(TokenType::illegal, "")} {}
-
-  std::unique_ptr<ExpressionAstNode> parseIntegerExpression(std::istream&);
-  std::unique_ptr<ExpressionAstNode> parseIdentifierExpression(std::istream&);
+  Parser(Lexer l, std::istream inputStream) : lexer{l}, currentToken{Token(TokenType::illegal, "")} {
+    getNextToken(inputStream);
+  }
 
  private:
   Lexer lexer;
   Token currentToken;
   void getNextToken(std::istream&);
+  std::unique_ptr<ExpressionAstNode> parseIntegerExpression(std::istream&);
+  std::unique_ptr<ExpressionAstNode> parseIdentifierExpression(std::istream&);
+  std::unique_ptr<ExpressionAstNode> parsePrimaryExpression(std::istream&);
 };
 
 #endif  // !PARSER_H
