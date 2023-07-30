@@ -1,3 +1,7 @@
+#ifndef PARSER_EXCEPTION_H
+#define PARSER_EXCEPTION_H
+
+#define PARSER
 #include <exception>
 #include <format>
 #include <string>
@@ -10,3 +14,5 @@ class InvalidTokenTypeException : public std::exception {
   TokenType expectedTokenType, receivedTokenType;
   std::string receivedValue;
 };
+
+#endif  // !PARSER_EXCEPTION_H

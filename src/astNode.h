@@ -1,6 +1,10 @@
+#ifndef AST_NODE_H
+#define AST_NODE_H
+
 #include <cstdint>
 #include <memory>
 #include <string>
+
 class ExpressionAstNode {};
 
 class NumberExpressionAstNode : public ExpressionAstNode {
@@ -23,3 +27,4 @@ class BinaryExpressionAstNode : public ExpressionAstNode {
   std::unique_ptr<ExpressionAstNode> lhs, rhs;
 };
 
+#endif // !AST_NODE_H
