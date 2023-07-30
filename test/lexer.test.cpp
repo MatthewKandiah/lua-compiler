@@ -115,3 +115,30 @@ TEST(LexerTests, ShouldHandleLocalKeywordAndIdentifiers) {
   EXPECT_EQ(results[7].type, TokenType::local);
 }
 
+TEST(LexerTests, ShouldHandleSingleDigitInteger) {
+  std::istringstream inputStream("1");
+  Token result = Lexer().getNextToken(inputStream);
+  EXPECT_EQ(result.type, TokenType::integer);
+  EXPECT_EQ(result.value, "1");
+}
+
+TEST(LexerTests, ShouldHandleMultiDigitIntegers) {
+  std::istringstream inputStream("123456");
+  Token result = Lexer().getNextToken(inputStream);
+  EXPECT_EQ(result.type, TokenType::integer);
+  EXPECT_EQ(result.value, "123456");
+}
+
+TEST(LexerTests, ShouldHandleMultipleIntegers) {
+  std::istringstream inputStream("1 23 456 7890");
+  Token result1 = Lexer().getNextToken(inputStream);
+  Token result2 = Lexer().getNextToken(inputStream);
+  Token result3 = Lexer().getNextToken(inputStream);
+  Token result4 = Lexer().getNextToken(inputStream);
+
+  EXPECT_EQ(result1.value, "1");
+  EXPECT_EQ(result2.value, "23");
+  EXPECT_EQ(result3.value, "456");
+  EXPECT_EQ(result4.value, "7890");
+}
+

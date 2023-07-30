@@ -42,7 +42,13 @@ Token Lexer::getNextToken(std::istream& characterStream) {
   }
 
   if (std::isdigit(lastCharacter)) {
-    // got the start of a number
+    std::string buffer {lastCharacter};
+    lastCharacter = characterStream.get();
+    while (std::isdigit(lastCharacter)) {
+      buffer.push_back(lastCharacter);
+      lastCharacter = characterStream.get();
+    }
+    return Token(TokenType::integer, buffer);
   }
 
   return Token(TokenType::illegal, std::string(1, lastCharacter));
