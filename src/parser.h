@@ -22,10 +22,7 @@ class Parser {
   Lexer lexer;
   Token currentToken;
   void getNextToken(std::istream&);
-  const std::map<char, std::int64_t> binaryOperatorPrecedence {
-    std::make_pair('+', 20),
-    std::make_pair('-', 20),
-  };
+  std::int64_t getTokenPrecedence(Token);
   std::unique_ptr<ExpressionAstNode> parseIntegerExpression(std::istream&);
   std::unique_ptr<ExpressionAstNode> parseIdentifierExpression(std::istream&);
   std::unique_ptr<ExpressionAstNode> parsePrimaryExpression(std::istream&);

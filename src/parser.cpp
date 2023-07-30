@@ -44,8 +44,43 @@ Parser::parsePrimaryExpression(std::istream &inputStream) {
 std::unique_ptr<ExpressionAstNode>
 Parser::parseBinaryExpression(std::istream &inputStream, std::int64_t expressionPrecedence, std::unique_ptr<ExpressionAstNode> lhs) {
   while (true) {
-    // continue here from https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl02.html
+    std::int64_t tokenPrecedence = getTokenPrecedence(currentToken);
+    if (tokenPrecedence < expressionPrecedence) {
+      return lhs;
+    }
+
+    char binaryOperatorCharacter = static_cast<char>(currentToken.value[0]);
+    getNextToken(inputStream);
+    auto rhs = parsePrimaryExpression(inputStream);   
+    // parsing primary expression consumes that token, so current token may be another operator
+    std::int64_t nextTokenPrecedence = getTokenPrecedence(currentToken);
+    if (tokenPrecedence < nextTokenPrecedence) {
+      // next operator is higher precedence, so it will act before this operator does
+      rhs = parseBinaryExpression(inputStream, tokenPrecedence + 1, std::move(rhs));
+      if (!rhs) {
+        throw FailedToParseExpressionException();
+      }
+    } 
+    // next operator is lower precedence, so it will act after this operator does
+    lhs = std::make_unique<BinaryExpressionAstNode>(binaryOperatorCharacter, std::move(lhs), std::move(rhs));
   }
+}
+
+std::int64_t Parser::getTokenPrecedence(Token token) {
+  switch (token.type) {
+    case TokenType::plus:
+    case TokenType::minus:
+      return 20;
+    case TokenType::eof:
+    case TokenType::illegal:
+    case TokenType::identifier:
+    case TokenType::integer:
+    case TokenType::equals:
+    case TokenType::leftBracket:
+    case TokenType::rightBracket:
+    case TokenType::local:
+    return -1;
+    }
 }
 
 std::unique_ptr<ExpressionAstNode>
