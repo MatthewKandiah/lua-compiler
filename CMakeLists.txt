@@ -15,9 +15,8 @@ add_subdirectory(apps)
 
 # set up test building
 option(BUILD_TESTS "Build the tests" ON)
-if (BUILD_TESTS)
-	enable_testing()
-	include(GoogleTest)
-	add_subdirectory(test)
+if(BUILD_TESTS)
+  enable_testing()
+  include(GoogleTest)
+  add_subdirectory(test)
 endif()
-
