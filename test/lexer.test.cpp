@@ -49,3 +49,14 @@ TEST(LexerTests, ShouldConsumeTokensAsTheyAreRead) {
   EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::leftBracket);
   EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::rightBracket);
 }
+
+TEST(LexerTests, ShouldReturnEOFToken) {
+  std::istringstream inputStream{""};
+  EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::eof);
+}
+
+TEST(LexerTests, ShouldHandleAllWhitespaceInput) {
+  std::istringstream inputStream("\n\t   \t\n");
+  EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::eof);
+}
+

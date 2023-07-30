@@ -6,7 +6,9 @@ Token Lexer::getNextToken(std::istream& characterStream) {
     lastCharacter = characterStream.get();
   }
 
-  // probably need to check here if we've reached end of file for EOF token
+  if (!characterStream) {
+    return Token(TokenType::eof, "");
+  }
 
   switch (lastCharacter) {
     case '=':
