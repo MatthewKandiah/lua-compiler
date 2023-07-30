@@ -12,3 +12,4 @@ macro(add_test TEST_NAME)
 endmacro()
 
 add_test(lexer lexer.test.cpp)
+add_test(parser parser.test.cpp)
