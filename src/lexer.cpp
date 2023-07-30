@@ -1,13 +1,9 @@
 #include "lexer.h"
+#include <istream>
 
-#include <cctype>
-#include <cstdio>
-#include <string_view>
-
-Token Lexer::getNextToken() {
-  // skips whitespace
+Token Lexer::getNextToken(std::istream& characterStream) {
   while (std::isspace(lastCharacter)) {
-    lastCharacter = characterStream->get();
+    lastCharacter = characterStream.get();
   }
 
   // probably need to check here if we've reached end of file for EOF token
