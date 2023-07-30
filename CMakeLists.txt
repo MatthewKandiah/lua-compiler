@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 23)
 
 project(lua-compiler VERSION 0.1)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # set up library
 add_library(lua-compiler STATIC)
 add_subdirectory(src)
