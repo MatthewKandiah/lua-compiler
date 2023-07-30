@@ -2,10 +2,22 @@
 #include "astNode.h"
 #include "parserException.h"
 #include "tokenType.h"
+#include <cstdint>
 #include <istream>
+#include <memory>
 
 void Parser::getNextToken(std::istream &inputStream) {
   currentToken = lexer.getNextToken(inputStream);
+}
+
+std::unique_ptr<ExpressionAstNode>
+Parser::parseExpression(std::istream &inputStream) {
+  auto lhs = parsePrimaryExpression(inputStream);
+  if (!lhs) {
+    throw FailedToParseExpressionException();
+  }
+
+  return parseBinaryExpression(inputStream, 0, std::move(lhs));
 }
 
 std::unique_ptr<ExpressionAstNode>
@@ -25,7 +37,14 @@ Parser::parsePrimaryExpression(std::istream &inputStream) {
   case TokenType::leftBracket:
   case TokenType::rightBracket:
   case TokenType::local:
-    throw UnexpectedToken(currentToken);
+    throw UnexpectedTokenException(currentToken);
+  }
+}
+
+std::unique_ptr<ExpressionAstNode>
+Parser::parseBinaryExpression(std::istream &inputStream, std::int64_t expressionPrecedence, std::unique_ptr<ExpressionAstNode> lhs) {
+  while (true) {
+    // continue here from https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl02.html
   }
 }
 

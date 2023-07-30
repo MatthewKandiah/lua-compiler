@@ -17,10 +17,12 @@ public:
   std::string receivedValue;
 };
 
-class UnexpectedToken : public std::exception {
+class UnexpectedTokenException : public std::exception {
 public:
-  UnexpectedToken(Token t) : token{t} {};
+  UnexpectedTokenException(Token t) : token{t} {};
   Token token;
 };
+
+class FailedToParseExpressionException : public std::exception {};
 
 #endif // !PARSER_EXCEPTION_H
