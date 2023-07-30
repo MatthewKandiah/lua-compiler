@@ -33,7 +33,6 @@ Token Lexer::getNextToken(std::istream& characterStream) {
       buffer.push_back(lastCharacter);
       lastCharacter = characterStream.get();
     }
-    std::cerr << "buffer\t" << buffer << '\n';
     if (buffer == std::string("local")) {
       return Token(TokenType::local, "");
     } else {
