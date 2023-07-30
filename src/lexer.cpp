@@ -1,5 +1,8 @@
 #include "lexer.h"
+#include <cctype>
+#include <iostream>
 #include <istream>
+#include <string>
 
 Token Lexer::getNextToken(std::istream& characterStream) {
   while (std::isspace(lastCharacter)) {
@@ -24,7 +27,19 @@ Token Lexer::getNextToken(std::istream& characterStream) {
   }
 
   if (std::isalpha(lastCharacter)) {
-    // could be an identifier or a keyword
+    std::string buffer {lastCharacter};
+    lastCharacter = characterStream.get();
+    while (std::isalnum(lastCharacter)) {
+      buffer.push_back(lastCharacter);
+      lastCharacter = characterStream.get();
+    }
+    std::cerr << "buffer\t" << buffer << '\n';
+    if (buffer == std::string("local")) {
+      return Token(TokenType::local, "");
+    } else {
+      return Token(TokenType::identifier, buffer);
+    }
+    buffer.clear();
   }
 
   if (std::isdigit(lastCharacter)) {

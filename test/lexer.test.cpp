@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <sstream>
+#include <vector>
 
 #include "gtest/gtest.h"
 
@@ -63,5 +64,54 @@ TEST(LexerTests, ShouldHandleAllWhitespaceInput) {
 TEST(LexerTests, ShouldHandleIllegalToken) {
   std::istringstream inputStream("Š");
   EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::illegal);
+}
+
+TEST(LexerTests, ShouldHandleSingleCharacterIdentifiers) {
+  std::istringstream inputStream("a");
+  Token result = Lexer().getNextToken(inputStream);
+  EXPECT_EQ(result.type, TokenType::identifier);
+  EXPECT_EQ(result.value, "a");
+}
+
+TEST(LexerTests, ShouldHandleMultiChararcterIdentifiers) {
+  std::istringstream inputStream("abcdef");
+  Token result = Lexer().getNextToken(inputStream);
+  EXPECT_EQ(result.type, TokenType::identifier);
+  EXPECT_EQ(result.value, "abcdef");
+}
+
+TEST(LexerTests, ShouldSplitIdentifiersAtWhitespace) {
+  std::istringstream inputStream("a bc def");
+
+  Token result1 = Lexer().getNextToken(inputStream);
+  Token result2 = Lexer().getNextToken(inputStream);
+  Token result3 = Lexer().getNextToken(inputStream);
+
+  EXPECT_EQ(result1.value, "a");
+  EXPECT_EQ(result2.value, "bc");
+  EXPECT_EQ(result3.value, "def");
+}
+
+TEST(LexerTests, ShouldHandleLocalKeyword) {
+  std::istringstream inputStream("local");
+  EXPECT_EQ(Lexer().getNextToken(inputStream).type, TokenType::local);
+}
+
+TEST(LexerTests, ShouldHandleLocalKeywordAndIdentifiers) {
+  std::istringstream inputStream("a local b local local c d local");
+  std::vector<Token> results {};
+  while (inputStream) {
+    results.push_back(Lexer().getNextToken(inputStream));
+  }
+
+  EXPECT_EQ(results.size(), 8);
+  EXPECT_EQ(results[0].type, TokenType::identifier);
+  EXPECT_EQ(results[1].type, TokenType::local);
+  EXPECT_EQ(results[2].type, TokenType::identifier);
+  EXPECT_EQ(results[3].type, TokenType::local);
+  EXPECT_EQ(results[4].type, TokenType::local);
+  EXPECT_EQ(results[5].type, TokenType::identifier);
+  EXPECT_EQ(results[6].type, TokenType::identifier);
+  EXPECT_EQ(results[7].type, TokenType::local);
 }
 
