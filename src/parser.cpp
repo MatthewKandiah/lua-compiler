@@ -35,3 +35,14 @@ AstExpressionNode Parser::parsePrimaryExpression() {
   }
 }
 
+std::int64_t getOperatorPrecedence(char op) {
+  switch(op){
+    case '+':
+    case '-':
+      return 10;
+    default:
+      std::cerr << "Failed to get operator precedence\n";
+      throw std::exception();
+  }
+};
+
