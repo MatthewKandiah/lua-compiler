@@ -9,7 +9,8 @@
 #include <memory>
 
 Token Parser::getNextToken(std::istream &inputStream) {
-  return Lexer().getNextToken(inputStream);
+  auto result = lexer.getNextToken(inputStream);
+  return result;
 };
 
 std::unique_ptr<AstExpressionNode> Parser::parseExpression(std::istream &inputStream) {
@@ -29,7 +30,6 @@ std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::istream
     currentToken = getNextToken(inputStream);
     auto rhs = parsePrimaryExpression(inputStream);
     if (!rhs) return nullptr;
-
 
     std::int64_t nextTokenPrecedence = getOperatorPrecedence(currentToken.value);
     if (tokenPrecedence < nextTokenPrecedence) {

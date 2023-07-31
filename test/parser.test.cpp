@@ -64,6 +64,16 @@ TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
   EXPECT_EQ(result->rhs, nullptr);
 }
 
+TEST(DebuggingTests, ShouldGetCorrectTokens) {
+  std::istringstream inputStream {"1+a"};
+  auto lexer = Lexer();
+
+  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::integer);
+  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::plus);
+  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::identifier);
+
+}
+
 TEST(ParserTests, ShouldParsePlusExpression) {
   std::istringstream inputStream {"1+a"};
 

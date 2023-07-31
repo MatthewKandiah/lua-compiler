@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include "astNode.h"
+#include "lexer.h"
 #include "token.h"
 #include "tokenType.h"
 #include <cstdint>
@@ -10,6 +11,7 @@ class Parser {
 public:
   Parser(std::istream &inputStream): currentToken{TokenType::illegal, ""} {currentToken = getNextToken(inputStream);} ;
 
+  Lexer lexer {};
   Token currentToken;
   Token getNextToken(std::istream &);
   std::unique_ptr<AstExpressionNode> parseExpression(std::istream &);
