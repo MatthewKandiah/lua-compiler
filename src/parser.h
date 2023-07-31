@@ -12,6 +12,8 @@ public:
   Token currentToken;
   Token getNextToken(std::istream &);
   AstExpressionNode parseExpression(std::istream &);
+  AstExpressionNode parsePrimaryExpression();
+
 };
 
 #endif // !PARSER_H
