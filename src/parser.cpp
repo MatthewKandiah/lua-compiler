@@ -21,6 +21,7 @@ AstExpressionNode Parser::parsePrimaryExpression() {
     case TokenType::integer:
       return AstExpressionNode(AstNodeType::integer, currentToken.value, nullptr, nullptr);
     case TokenType::identifier:
+      return AstExpressionNode(AstNodeType::variable, currentToken.value, nullptr, nullptr);
     case TokenType::eof:
     case TokenType::illegal:
     case TokenType::equals:
