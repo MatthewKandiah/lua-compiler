@@ -1,31 +1,22 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 
+#include <algorithm>
 #include <cstdint>
 #include <memory>
 #include <string>
 
-class ExpressionAstNode {};
-
-class NumberExpressionAstNode : public ExpressionAstNode {
-public:
-  NumberExpressionAstNode(std::int64_t v) : val{v} {};
-  std::int64_t val;
+enum class AstNodeType {
+  integer,
+  variable,
+  binaryOperator,
 };
 
-class VariableExpressionAstNode : public ExpressionAstNode {
+class AstExpressionNode {
 public:
-  VariableExpressionAstNode(const std::string &n) : name{n} {};
-  std::string name;
+  AstExpressionNode(AstNodeType t, std::string v, std::unique_ptr<AstExpressionNode> l, std::unique_ptr<AstExpressionNode> r) : type {t}, value {v}, lhs {std::move(l)}, rhs {std::move(r)} {};
+  AstNodeType type;
+  std::string value;
+  std::unique_ptr<AstExpressionNode> lhs, rhs;
 };
-
-class BinaryExpressionAstNode : public ExpressionAstNode {
-public:
-  BinaryExpressionAstNode(char o, std::unique_ptr<ExpressionAstNode> l,
-                          std::unique_ptr<ExpressionAstNode> r)
-      : op{o}, lhs{std::move(l)}, rhs{std::move(r)} {};
-  char op;
-  std::unique_ptr<ExpressionAstNode> lhs, rhs;
-};
-
 #endif // !AST_NODE_H
