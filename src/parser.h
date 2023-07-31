@@ -4,6 +4,7 @@
 #include "astNode.h"
 #include "token.h"
 #include "tokenType.h"
+#include <cstdint>
 #include <istream>
 class Parser {
 public:
@@ -13,6 +14,7 @@ public:
   Token getNextToken(std::istream &);
   AstExpressionNode parseExpression(std::istream &);
   AstExpressionNode parsePrimaryExpression();
+  std::int64_t getOperatorPrecedence(char op);
 
 };
 
