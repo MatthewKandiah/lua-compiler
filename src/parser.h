@@ -12,9 +12,10 @@ public:
 
   Token currentToken;
   Token getNextToken(std::istream &);
-  AstExpressionNode parseExpression(std::istream &);
-  AstExpressionNode parsePrimaryExpression();
-  std::int64_t getOperatorPrecedence(char op);
+  std::unique_ptr<AstExpressionNode> parseExpression(std::istream &);
+  std::unique_ptr<AstExpressionNode> parsePrimaryExpression(std::istream &);
+  std::unique_ptr<AstExpressionNode> parseBinaryExpressionRhs(std::istream &, std::int64_t, std::unique_ptr<AstExpressionNode>);
+  std::int64_t getOperatorPrecedence(std::string);
 
 };
 
