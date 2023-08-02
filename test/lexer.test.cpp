@@ -164,23 +164,40 @@ TEST(LexerTests, ShouldHandleMultipleIntegers) {
 TEST(LexerTests, ShouldHandleMixOfSymbolsIntegersIdentifiersAndSpaces) {
   std::istringstream inputStream {"1 + a - 12+5-b"};
   auto lexer = Lexer();
-  Token result1 = lexer.getNextToken(inputStream);
-  Token result2 = lexer.getNextToken(inputStream);
-  Token result3 = lexer.getNextToken(inputStream);
-  Token result4 = lexer.getNextToken(inputStream);
-  Token result5 = lexer.getNextToken(inputStream);
-  Token result6 = lexer.getNextToken(inputStream);
-  Token result7 = lexer.getNextToken(inputStream);
-  Token result8 = lexer.getNextToken(inputStream);
-  Token result9 = lexer.getNextToken(inputStream);
 
+  Token result1 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result1.type, TokenType::integer);
+  EXPECT_EQ(result1.value, "1");
+  
+  Token result2 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result2.type, TokenType::plus);
+  EXPECT_EQ(result2.value, "");
+  
+  Token result3 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result3.type, TokenType::identifier);
+  EXPECT_EQ(result3.value, "a");
+  
+  Token result4 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result4.type, TokenType::minus);
+  EXPECT_EQ(result4.value, "");
+  
+  Token result5 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result5.type, TokenType::integer);
+  EXPECT_EQ(result5.value, "12");
+  
+  Token result6 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result6.type, TokenType::plus);
+  EXPECT_EQ(result6.value, "");
+  
+  Token result7 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result7.type, TokenType::integer);
+  EXPECT_EQ(result7.value, "5");
+  
+  Token result8 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result8.type, TokenType::minus);
+  EXPECT_EQ(result8.value, "");
+
+  Token result9 = lexer.getNextToken(inputStream);
   EXPECT_EQ(result9.type, TokenType::identifier);
+  EXPECT_EQ(result9.value, "b");
 }

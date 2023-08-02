@@ -13,17 +13,27 @@ Token Lexer::getNextToken(std::istream &characterStream) {
     return Token(TokenType::eof, "");
   }
 
+  Token result = Token(TokenType::illegal, "");
   switch (lastCharacter) {
   case '=':
-    return Token(TokenType::equals, "");
+    result = Token(TokenType::equals, "");
+    break;
   case '+':
-    return Token(TokenType::plus, "");
+    result = Token(TokenType::plus, "");
+    break;
   case '-':
-    return Token(TokenType::minus, "");
+    result = Token(TokenType::minus, "");
+    break;
   case '(':
-    return Token(TokenType::leftBracket, "");
+    result = Token(TokenType::leftBracket, "");
+    break;
   case ')':
-    return Token(TokenType::rightBracket, "");
+    result = Token(TokenType::rightBracket, "");
+    break;
+  }
+  if (result.type != TokenType::illegal) {
+    lastCharacter = characterStream.get();
+    return result;
   }
 
   if (std::isalpha(lastCharacter)) {

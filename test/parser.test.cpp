@@ -74,6 +74,7 @@ TEST(DebuggingTests, ShouldGetCorrectTokens) {
 
 }
 
+// okay, now we can see we're getting the correct tokens, so we must have an actual issue with the parsing logic
 TEST(ParserTests, ShouldParsePlusExpression) {
   std::istringstream inputStream {"1+a"};
 
