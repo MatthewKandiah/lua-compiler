@@ -24,6 +24,7 @@ std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::istream
     std::int64_t tokenPrecedence = getOperatorPrecedence(currentToken.value);
     if (tokenPrecedence < expressionPrecedence) {
       // next token is lower precedence than the current expression, so we can safely calculate the value of the current expression without looking at it
+      std::cerr << "return lhs " << lhs->value << '\n';
       return lhs;
     }
     Token binaryOperator = currentToken;
