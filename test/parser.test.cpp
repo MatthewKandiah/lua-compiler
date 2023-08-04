@@ -106,3 +106,21 @@ TEST(ParserTests, ShouldParseEqualsExpression) {
   EXPECT_EQ(result->rhs->value, "26");
 }
 
+TEST(ParserTest, ShouldParseNestedBinaryExpressions) {
+  std::istringstream inputStream {"foo = 17 + 24"};
+
+  auto parser = Parser(inputStream);
+  auto result = parser.parseExpression(inputStream);
+
+  EXPECT_EQ(result->type, AstNodeType::binaryOperator);
+  EXPECT_EQ(result->value, "=");
+  EXPECT_EQ(result->lhs->type, AstNodeType::variable);
+  EXPECT_EQ(result->lhs->value, "foo");
+  EXPECT_EQ(result->rhs->type, AstNodeType::binaryOperator);
+  EXPECT_EQ(result->rhs->value, "+");
+  EXPECT_EQ(result->rhs->lhs->type, AstNodeType::integer);
+  EXPECT_EQ(result->rhs->lhs->value, "17");
+  EXPECT_EQ(result->rhs->rhs->type, AstNodeType::integer);
+  EXPECT_EQ(result->rhs->rhs->value, "24");
+}
+
