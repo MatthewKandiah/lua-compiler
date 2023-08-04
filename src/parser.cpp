@@ -67,6 +67,7 @@ std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression(std::istream &
 }
 
 std::int64_t Parser::getOperatorPrecedence(std::string opString) {
+  // BUG - we're passing in the value, which is "" for all operators, so we always return -1?!
   if (opString.length() == 0) return -1;
   char op = opString[0];
   switch(op){
