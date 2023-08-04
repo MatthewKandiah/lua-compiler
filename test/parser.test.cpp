@@ -64,16 +64,6 @@ TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
   EXPECT_EQ(result->rhs, nullptr);
 }
 
-TEST(DebuggingTests, ShouldGetCorrectTokens) {
-  std::istringstream inputStream {"1+a"};
-  auto lexer = Lexer();
-
-  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::integer);
-  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::plus);
-  EXPECT_EQ(lexer.getNextToken(inputStream).type, TokenType::identifier);
-
-}
-
 TEST(ParserTests, ShouldParsePlusExpression) {
   std::istringstream inputStream {"1+a"};
 
@@ -82,5 +72,37 @@ TEST(ParserTests, ShouldParsePlusExpression) {
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "+");
+  EXPECT_EQ(result->lhs->type, AstNodeType::integer);
+  EXPECT_EQ(result->lhs->value, "1");
+  EXPECT_EQ(result->rhs->type, AstNodeType::variable);
+  EXPECT_EQ(result->rhs->value, "a");
+}
+
+TEST(ParserTests, ShouldParseMinusExpression) {
+  std::istringstream inputStream {"b-2"};
+
+  auto parser = Parser(inputStream);
+  auto result = parser.parseExpression(inputStream);
+
+  EXPECT_EQ(result->type, AstNodeType::binaryOperator);
+  EXPECT_EQ(result->value, "-");
+  EXPECT_EQ(result->lhs->type, AstNodeType::variable);
+  EXPECT_EQ(result->lhs->value, "b");
+  EXPECT_EQ(result->rhs->type, AstNodeType::integer);
+  EXPECT_EQ(result->rhs->value, "2");
+}
+
+TEST(ParserTests, ShouldParseEqualsExpression) {
+  std::istringstream inputStream {"Z=26"};
+
+  auto parser = Parser(inputStream);
+  auto result = parser.parseExpression(inputStream);
+
+  EXPECT_EQ(result->type, AstNodeType::binaryOperator);
+  EXPECT_EQ(result->value, "=");
+  EXPECT_EQ(result->lhs->type, AstNodeType::variable);
+  EXPECT_EQ(result->lhs->value, "Z");
+  EXPECT_EQ(result->rhs->type, AstNodeType::integer);
+  EXPECT_EQ(result->rhs->value, "26");
 }
 
