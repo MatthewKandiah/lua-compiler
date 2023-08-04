@@ -21,7 +21,7 @@ std::unique_ptr<AstExpressionNode> Parser::parseExpression(std::istream &inputSt
 
 std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::istream &inputStream, std::int64_t expressionPrecedence, std::unique_ptr<AstExpressionNode> lhs) {
   while(true) {
-    std::int64_t tokenPrecedence = getOperatorPrecedence(currentToken.value);
+    std::int64_t tokenPrecedence = getOperatorPrecedence(currentToken);
     if (tokenPrecedence < expressionPrecedence) {
       // next token is lower precedence than the current expression, so we can safely calculate the value of the current expression without looking at it
       std::cerr << "return lhs " << lhs->value << '\n';
@@ -32,13 +32,13 @@ std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::istream
     auto rhs = parsePrimaryExpression(inputStream);
     if (!rhs) return nullptr;
 
-    std::int64_t nextTokenPrecedence = getOperatorPrecedence(currentToken.value);
+    std::int64_t nextTokenPrecedence = getOperatorPrecedence(currentToken);
     if (tokenPrecedence < nextTokenPrecedence) {
       // next token is higher precedence and needs to be calculated first, then its value passed in as the rhs of this binary expression
       rhs = parseBinaryExpressionRhs(inputStream, tokenPrecedence + 1, std::move(rhs));
     }
     // next token is equal / lower precedence, we can just calculate the value of this expression now and pass the value into the next operator
-    lhs = std::make_unique<AstExpressionNode>(AstNodeType::binaryOperator, binaryOperator.value, std::move(lhs), std::move(rhs));
+    lhs = std::make_unique<AstExpressionNode>(AstNodeType::binaryOperator, tokenTypeToBinaryOperatorString(binaryOperator.type), std::move(lhs), std::move(rhs));
   }
 }
 
@@ -66,18 +66,35 @@ std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression(std::istream &
   return result;
 }
 
-std::int64_t Parser::getOperatorPrecedence(std::string opString) {
-  // BUG - we're passing in the value, which is "" for all operators, so we always return -1?!
-  if (opString.length() == 0) return -1;
-  char op = opString[0];
-  switch(op){
-    case '+':
-    case '-':
+std::int64_t Parser::getOperatorPrecedence(Token token) {
+  // higher precedence operators are done before lower precedence operators
+  switch(token.type){
+    case TokenType::plus:
+    case TokenType::minus:
       return 10;
-    case '=':
+    case TokenType::equals:
       return 0;
     default:
       return -1;
   }
 };
+
+std::string Parser::tokenTypeToBinaryOperatorString(TokenType tokenType) {
+  switch (tokenType) {
+    case TokenType::plus:
+      return "+";
+    case TokenType::minus:
+      return "-";
+    case TokenType::equals:
+      return "=";
+    case TokenType::eof:
+    case TokenType::illegal:
+    case TokenType::identifier:
+    case TokenType::integer:
+    case TokenType::leftBracket:
+    case TokenType::rightBracket:
+    case TokenType::local:
+      return "";
+    }
+}
 
