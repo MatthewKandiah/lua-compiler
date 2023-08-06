@@ -1,5 +1,4 @@
 cd build
-cmake ..
-cmake --build .
+cmake --build . -j8
 cd ..
 
