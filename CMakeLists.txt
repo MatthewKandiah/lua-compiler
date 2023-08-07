@@ -23,7 +23,3 @@ if(BUILD_TESTS)
   add_subdirectory(test)
 endif()
 
-# set up llvm
-add_subdirectory(extern/llvm-project/llvm)
-target_include_directories(lua-compiler PRIVATE extern/llvm-project/llvm/include)
-
