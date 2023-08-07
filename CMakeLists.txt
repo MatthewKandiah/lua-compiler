@@ -25,7 +25,5 @@ endif()
 
 # set up llvm
 add_subdirectory(extern/llvm-project/llvm)
-target_include_directories(lua-compiler PRIVATE extern/llvm-project/llvm/include/llvm extern/llvm-project/llvm/include/llvm-c)
-target_link_directories(lua-compiler PRIVATE extern/llvm-projectt/llvm/lib)
-target_link_libraries(lua-compiler llvm)
+target_include_directories(lua-compiler PRIVATE extern/llvm-project/llvm/include)
 

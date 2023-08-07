@@ -7,7 +7,6 @@
 #include "tokenType.h"
 #include <cstdint>
 #include <istream>
-#include <sys/wait.h>
 class Parser {
 public:
   Parser(std::istream &inputStream): currentToken{TokenType::illegal, ""} {currentToken = getNextToken(inputStream);} ;
