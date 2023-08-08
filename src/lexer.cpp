@@ -9,7 +9,7 @@ Token Lexer::getNextToken() {
     lastCharacter = inputStreamPtr->get();
   }
 
-  if (!inputStreamPtr) {
+  if (!(*inputStreamPtr)) {
     return Token(TokenType::eof, "");
   }
 
