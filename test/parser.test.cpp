@@ -1,19 +1,20 @@
 #include "gtest/gtest.h"
 #include <sstream>
+#include "../src/lexer.h"
 #include "../src/parser.h"
 #include "../src/astNode.h"
 
 TEST(ParserTests, ShouldReturnNullPointerIfEOF) {
   std::istringstream inputStream {""};
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
   EXPECT_EQ(result, nullptr);
 }
 
 TEST(ParserTests, ShouldParseSingleIntegerExpression) {
   std::istringstream inputStream {"1"};
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "1");
   EXPECT_EQ(result->lhs, nullptr);
@@ -22,8 +23,8 @@ TEST(ParserTests, ShouldParseSingleIntegerExpression) {
 
 TEST(ParserTests, ShouldParseSingleMultiDigitIntegerExpressions) {
   std::istringstream inputStream {"12345"};
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "12345");
 }
@@ -31,8 +32,8 @@ TEST(ParserTests, ShouldParseSingleMultiDigitIntegerExpressions) {
 TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
   std::istringstream inputStream {"a"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "a");
@@ -43,8 +44,8 @@ TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
 TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
   std::istringstream inputStream {"arst"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "arst");
@@ -55,8 +56,8 @@ TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
 TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
   std::istringstream inputStream {"a1r2s3t"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "a1r2s3t");
@@ -67,8 +68,8 @@ TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
 TEST(ParserTests, ShouldParsePlusExpression) {
   std::istringstream inputStream {"1+a"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "+");
@@ -81,8 +82,8 @@ TEST(ParserTests, ShouldParsePlusExpression) {
 TEST(ParserTests, ShouldParseMinusExpression) {
   std::istringstream inputStream {"b-2"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "-");
@@ -95,8 +96,8 @@ TEST(ParserTests, ShouldParseMinusExpression) {
 TEST(ParserTests, ShouldParseEqualsExpression) {
   std::istringstream inputStream {"Z=26"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "=");
@@ -109,8 +110,8 @@ TEST(ParserTests, ShouldParseEqualsExpression) {
 TEST(ParserTest, ShouldParseNestedBinaryExpressions) {
   std::istringstream inputStream {"foo = 17 + bar"};
 
-  auto parser = Parser(inputStream);
-  auto result = parser.parseExpression(inputStream);
+  auto parser = Parser(Lexer(inputStream));
+  auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "=");

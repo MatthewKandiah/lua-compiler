@@ -4,13 +4,12 @@
 #include <istream>
 #include <string>
 
-Token Lexer::getNextToken(std::istream &characterStream) {
+Token Lexer::getNextToken() {
   while (std::isspace(lastCharacter)) {
-    lastCharacter = characterStream.get();
+    lastCharacter = inputStreamPtr->get();
   }
 
-  if (!characterStream) {
-    std::cerr << "Lexer emits eof" << '\n';
+  if (!inputStreamPtr) {
     return Token(TokenType::eof, "");
   }
 
@@ -18,42 +17,35 @@ Token Lexer::getNextToken(std::istream &characterStream) {
   switch (lastCharacter) {
   case '=':
     result = Token(TokenType::equals, "");
-    std::cerr << "Lexer emits equals" << '\n';
     break;
   case '+':
     result = Token(TokenType::plus, "");
-    std::cerr << "Lexer emits plus" << '\n';
     break;
   case '-':
     result = Token(TokenType::minus, "");
-    std::cerr << "Lexer emits minus" << '\n';
     break;
   case '(':
     result = Token(TokenType::leftBracket, "");
-    std::cerr << "Lexer emits leftBracket" << '\n';
     break;
   case ')':
     result = Token(TokenType::rightBracket, "");
-    std::cerr << "Lexer emits rightBracket" << '\n';
     break;
   }
   if (result.type != TokenType::illegal) {
-    lastCharacter = characterStream.get();
+    lastCharacter = inputStreamPtr->get();
     return result;
   }
 
   if (std::isalpha(lastCharacter)) {
     std::string buffer{lastCharacter};
-    lastCharacter = characterStream.get();
+    lastCharacter = inputStreamPtr->get();
     while (std::isalnum(lastCharacter)) {
       buffer.push_back(lastCharacter);
-      lastCharacter = characterStream.get();
+      lastCharacter = inputStreamPtr->get();
     }
     if (buffer == std::string("local")) {
-      std::cerr << "Lexer emits keyword local" << '\n';
       return Token(TokenType::local, "");
     } else {
-      std::cerr << "Lexer emits identifier " << buffer << '\n';
       return Token(TokenType::identifier, buffer);
     }
     buffer.clear();
@@ -61,15 +53,13 @@ Token Lexer::getNextToken(std::istream &characterStream) {
 
   if (std::isdigit(lastCharacter)) {
     std::string buffer{lastCharacter};
-    lastCharacter = characterStream.get();
+    lastCharacter = inputStreamPtr->get();
     while (std::isdigit(lastCharacter)) {
       buffer.push_back(lastCharacter);
-      lastCharacter = characterStream.get();
+      lastCharacter = inputStreamPtr->get();
     }
-    std::cerr << "Lexer emits integer " << buffer << '\n';
     return Token(TokenType::integer, buffer);
   }
 
-  std::cerr << "Lexer emits illegal " << '\n';
   return Token(TokenType::illegal, std::string(1, lastCharacter));
 }

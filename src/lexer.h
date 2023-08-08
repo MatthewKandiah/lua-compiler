@@ -6,9 +6,11 @@
 
 class Lexer {
 public:
-  Token getNextToken(std::istream &);
+  Lexer(std::istream& inputStream): inputStreamPtr {&inputStream} {};
+  Token getNextToken();
 
 private:
+  std::istream* inputStreamPtr;
   char lastCharacter{' '};
 };
 

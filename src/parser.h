@@ -9,14 +9,14 @@
 #include <istream>
 class Parser {
 public:
-  Parser(std::istream &inputStream): currentToken{TokenType::illegal, ""} {currentToken = getNextToken(inputStream);} ;
+  Parser(Lexer l): lexer{std::move(l)}, currentToken{lexer.getNextToken()} {} ;
 
-  Lexer lexer {};
+  Lexer lexer;
   Token currentToken;
-  Token getNextToken(std::istream &);
-  std::unique_ptr<AstExpressionNode> parseExpression(std::istream &);
-  std::unique_ptr<AstExpressionNode> parsePrimaryExpression(std::istream &);
-  std::unique_ptr<AstExpressionNode> parseBinaryExpressionRhs(std::istream &, std::int64_t, std::unique_ptr<AstExpressionNode>);
+  Token getNextToken();
+  std::unique_ptr<AstExpressionNode> parseExpression();
+  std::unique_ptr<AstExpressionNode> parsePrimaryExpression();
+  std::unique_ptr<AstExpressionNode> parseBinaryExpressionRhs(std::int64_t, std::unique_ptr<AstExpressionNode>);
   std::int64_t getOperatorPrecedence(Token);
   std::string tokenTypeToBinaryOperatorString(TokenType);
 };

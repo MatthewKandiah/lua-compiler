@@ -5,44 +5,37 @@
 #include <cstdint>
 #include <exception>
 #include <iostream>
-#include <istream>
 #include <memory>
 
-Token Parser::getNextToken(std::istream &inputStream) {
-  auto result = lexer.getNextToken(inputStream);
-  return result;
-};
-
-std::unique_ptr<AstExpressionNode> Parser::parseExpression(std::istream &inputStream) {
-  auto lhs = parsePrimaryExpression(inputStream);
+std::unique_ptr<AstExpressionNode> Parser::parseExpression() {
+  auto lhs = parsePrimaryExpression();
   if (!lhs) return nullptr;
-  return parseBinaryExpressionRhs(inputStream, 0, std::move(lhs));
+  return parseBinaryExpressionRhs(0, std::move(lhs));
 };
 
-std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::istream &inputStream, std::int64_t expressionPrecedence, std::unique_ptr<AstExpressionNode> lhs) {
+std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::int64_t expressionPrecedence, std::unique_ptr<AstExpressionNode> lhs) {
   while(true) {
     std::int64_t tokenPrecedence = getOperatorPrecedence(currentToken);
     if (tokenPrecedence < expressionPrecedence) {
       // next token is lower precedence than the current expression, so we can safely calculate the value of the current expression without looking at it
-      std::cerr << "return lhs " << lhs->value << '\n';
       return lhs;
     }
     Token binaryOperator = currentToken;
-    currentToken = getNextToken(inputStream);
-    auto rhs = parsePrimaryExpression(inputStream);
+    currentToken = lexer.getNextToken();
+    auto rhs = parsePrimaryExpression();
     if (!rhs) return nullptr;
 
     std::int64_t nextTokenPrecedence = getOperatorPrecedence(currentToken);
     if (tokenPrecedence < nextTokenPrecedence) {
       // next token is higher precedence and needs to be calculated first, then its value passed in as the rhs of this binary expression
-      rhs = parseBinaryExpressionRhs(inputStream, tokenPrecedence + 1, std::move(rhs));
+      rhs = parseBinaryExpressionRhs(tokenPrecedence + 1, std::move(rhs));
     }
     // next token is equal / lower precedence, we can just calculate the value of this expression now and pass the value into the next operator
     lhs = std::make_unique<AstExpressionNode>(AstNodeType::binaryOperator, tokenTypeToBinaryOperatorString(binaryOperator.type), std::move(lhs), std::move(rhs));
   }
 }
 
-std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression(std::istream &inputStream) {
+std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression() {
   std::unique_ptr<AstExpressionNode> result;
   switch(currentToken.type) {
     case TokenType::integer:
@@ -62,7 +55,7 @@ std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression(std::istream &
       result = nullptr;
       break;
   }
-  currentToken = getNextToken(inputStream);
+  currentToken = lexer.getNextToken();
   return result;
 }
 
