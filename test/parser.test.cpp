@@ -1,21 +1,23 @@
-#include "gtest/gtest.h"
-#include <sstream>
-#include "../src/lexer.h"
 #include "../src/parser.h"
 #include "../src/astNode.h"
+#include "../src/lexer.h"
+#include "gtest/gtest.h"
+#include <memory>
+#include <sstream>
+#include <vector>
 
 TEST(ParserTests, ShouldReturnNullPointerIfEOF) {
-  std::istringstream inputStream {""};
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  std::istringstream inputStream{""};
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser {std::move(lexer)};
   auto result = parser.parseExpression();
   EXPECT_EQ(result, nullptr);
 }
 
 TEST(ParserTests, ShouldParseSingleIntegerExpression) {
-  std::istringstream inputStream {"1"};
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  std::istringstream inputStream{"1"};
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "1");
@@ -24,19 +26,19 @@ TEST(ParserTests, ShouldParseSingleIntegerExpression) {
 }
 
 TEST(ParserTests, ShouldParseSingleMultiDigitIntegerExpressions) {
-  std::istringstream inputStream {"12345"};
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  std::istringstream inputStream{"12345"};
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "12345");
 }
 
 TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
-  std::istringstream inputStream {"a"};
+  std::istringstream inputStream{"a"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
@@ -46,10 +48,10 @@ TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
 }
 
 TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
-  std::istringstream inputStream {"arst"};
+  std::istringstream inputStream{"arst"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
@@ -59,10 +61,10 @@ TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
 }
 
 TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
-  std::istringstream inputStream {"a1r2s3t"};
+  std::istringstream inputStream{"a1r2s3t"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::variable);
@@ -72,10 +74,10 @@ TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
 }
 
 TEST(ParserTests, ShouldParsePlusExpression) {
-  std::istringstream inputStream {"1+a"};
+  std::istringstream inputStream{"1+a"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
@@ -87,10 +89,10 @@ TEST(ParserTests, ShouldParsePlusExpression) {
 }
 
 TEST(ParserTests, ShouldParseMinusExpression) {
-  std::istringstream inputStream {"b-2"};
+  std::istringstream inputStream{"b-2"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
@@ -102,10 +104,10 @@ TEST(ParserTests, ShouldParseMinusExpression) {
 }
 
 TEST(ParserTests, ShouldParseEqualsExpression) {
-  std::istringstream inputStream {"Z=26"};
+  std::istringstream inputStream{"Z=26"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
@@ -117,10 +119,10 @@ TEST(ParserTests, ShouldParseEqualsExpression) {
 }
 
 TEST(ParserTest, ShouldParseNestedBinaryExpressions) {
-  std::istringstream inputStream {"foo = 17 + bar"};
+  std::istringstream inputStream{"foo = 17 + bar"};
 
-  auto lexer = Lexer(inputStream);
-  auto parser = Parser(&lexer);
+  auto lexer = std::make_unique<Lexer>(inputStream);
+  Parser parser{std::move(lexer)};
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
@@ -134,8 +136,7 @@ TEST(ParserTest, ShouldParseNestedBinaryExpressions) {
 
   EXPECT_EQ(result->rhs->lhs->type, AstNodeType::integer);
   EXPECT_EQ(result->rhs->lhs->value, "17");
-  
+
   EXPECT_EQ(result->rhs->rhs->type, AstNodeType::variable);
   EXPECT_EQ(result->rhs->rhs->value, "bar");
 }
-

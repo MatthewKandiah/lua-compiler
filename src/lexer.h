@@ -8,6 +8,7 @@
 class BaseLexer {
 public: 
   virtual Token getNextToken() = 0;
+  virtual ~BaseLexer() = default;
 };
 
 class Lexer : public BaseLexer {
@@ -22,7 +23,12 @@ private:
 
 class MockLexer : public BaseLexer {
 public:
-  MockLexer(std::vector<Token> t): tokens{std::move(t)} {}
+  MockLexer(std::vector<Token> t): tokens{t} {}
+  Token getNextToken() override {
+    Token nextToken = tokens.at(nextTokenIndex);
+    nextTokenIndex++;
+    return nextToken;
+  }
   int nextTokenIndex = 0;
   std::vector<Token> tokens;
 };
