@@ -21,7 +21,7 @@ std::unique_ptr<AstExpressionNode> Parser::parseBinaryExpressionRhs(std::int64_t
       return lhs;
     }
     Token binaryOperator = currentToken;
-    currentToken = lexer.getNextToken();
+    currentToken = lexerPtr->getNextToken();
     auto rhs = parsePrimaryExpression();
     if (!rhs) return nullptr;
 
@@ -55,7 +55,7 @@ std::unique_ptr<AstExpressionNode> Parser::parsePrimaryExpression() {
       result = nullptr;
       break;
   }
-  currentToken = lexer.getNextToken();
+  currentToken = lexerPtr->getNextToken();
   return result;
 }
 

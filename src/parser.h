@@ -9,9 +9,9 @@
 #include <istream>
 class Parser {
 public:
-  Parser(Lexer l): lexer{std::move(l)}, currentToken{lexer.getNextToken()} {} ;
+  Parser(BaseLexer* l): lexerPtr{std::move(l)}, currentToken{lexerPtr->getNextToken()} {} ;
 
-  Lexer lexer;
+  BaseLexer* lexerPtr;
   Token currentToken;
   Token getNextToken();
   std::unique_ptr<AstExpressionNode> parseExpression();
