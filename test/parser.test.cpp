@@ -7,17 +7,22 @@
 #include <vector>
 
 TEST(ParserTests, ShouldReturnNullPointerIfEOF) {
-  std::istringstream inputStream{""};
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token {TokenType::eof, ""};
+  std::vector<Token> tokens {token};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser {std::move(lexer)};
+
   auto result = parser.parseExpression();
   EXPECT_EQ(result, nullptr);
 }
 
 TEST(ParserTests, ShouldParseSingleIntegerExpression) {
-  std::istringstream inputStream{"1"};
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::integer, "1"};
+  Token token2 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
+
   auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "1");
@@ -26,21 +31,25 @@ TEST(ParserTests, ShouldParseSingleIntegerExpression) {
 }
 
 TEST(ParserTests, ShouldParseSingleMultiDigitIntegerExpressions) {
-  std::istringstream inputStream{"12345"};
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::integer, "12345"};
+  Token token2 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
+
   auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::integer);
   EXPECT_EQ(result->value, "12345");
 }
 
 TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
-  std::istringstream inputStream{"a"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "a"};
+  Token token2 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "a");
   EXPECT_EQ(result->lhs, nullptr);
@@ -48,12 +57,13 @@ TEST(ParserTests, ShouldParseSingleCharacterIdentifier) {
 }
 
 TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
-  std::istringstream inputStream{"arst"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "arst"};
+  Token token2 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "arst");
   EXPECT_EQ(result->lhs, nullptr);
@@ -61,12 +71,13 @@ TEST(ParserTests, ShouldParseMultiCharacterIdentifier) {
 }
 
 TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
-  std::istringstream inputStream{"a1r2s3t"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "a1r2s3t"};
+  Token token2 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::variable);
   EXPECT_EQ(result->value, "a1r2s3t");
   EXPECT_EQ(result->lhs, nullptr);
@@ -74,12 +85,15 @@ TEST(ParserTests, ShouldParseIdentifierContainingNumbers) {
 }
 
 TEST(ParserTests, ShouldParsePlusExpression) {
-  std::istringstream inputStream{"1+a"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::integer, "1"};
+  Token token2 {TokenType::plus, ""};
+  Token token3 {TokenType::identifier, "a"};
+  Token token4 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2, token3, token4};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "+");
   EXPECT_EQ(result->lhs->type, AstNodeType::integer);
@@ -89,12 +103,15 @@ TEST(ParserTests, ShouldParsePlusExpression) {
 }
 
 TEST(ParserTests, ShouldParseMinusExpression) {
-  std::istringstream inputStream{"b-2"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "b"};
+  Token token2 {TokenType::minus, ""};
+  Token token3 {TokenType::integer, "2"};
+  Token token4 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2, token3, token4};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "-");
   EXPECT_EQ(result->lhs->type, AstNodeType::variable);
@@ -104,12 +121,15 @@ TEST(ParserTests, ShouldParseMinusExpression) {
 }
 
 TEST(ParserTests, ShouldParseEqualsExpression) {
-  std::istringstream inputStream{"Z=26"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "Z"};
+  Token token2 {TokenType::equals, ""};
+  Token token3 {TokenType::integer, "26"};
+  Token token4 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2, token3, token4};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
-  auto result = parser.parseExpression();
 
+  auto result = parser.parseExpression();
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);
   EXPECT_EQ(result->value, "=");
   EXPECT_EQ(result->lhs->type, AstNodeType::variable);
@@ -119,10 +139,16 @@ TEST(ParserTests, ShouldParseEqualsExpression) {
 }
 
 TEST(ParserTest, ShouldParseNestedBinaryExpressions) {
-  std::istringstream inputStream{"foo = 17 + bar"};
-
-  auto lexer = std::make_unique<Lexer>(inputStream);
+  Token token1 {TokenType::identifier, "foo"};
+  Token token2 {TokenType::equals, ""};
+  Token token3 {TokenType::integer, "17"};
+  Token token4 {TokenType::plus, ""};
+  Token token5 {TokenType::identifier, "bar"};
+  Token token6 {TokenType::eof, ""};
+  std::vector<Token> tokens {token1, token2, token3, token4, token5, token6};
+  auto lexer = std::make_unique<MockLexer>(tokens);
   Parser parser{std::move(lexer)};
+
   auto result = parser.parseExpression();
 
   EXPECT_EQ(result->type, AstNodeType::binaryOperator);

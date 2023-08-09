@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "token.h"
+#include "tokenType.h"
 
 class BaseLexer {
 public: 
@@ -23,12 +24,17 @@ private:
 
 class MockLexer : public BaseLexer {
 public:
-  MockLexer(std::vector<Token> t): tokens{t} {}
+  MockLexer(std::vector<Token> t): tokens{std::move(t)} {}
   Token getNextToken() override {
-    Token nextToken = tokens.at(nextTokenIndex);
+    if (currentToken.type == TokenType::eof) {
+      // once we return eof we expect to keep returning it whenever asked
+      return currentToken;
+    }
+    currentToken = tokens.at(nextTokenIndex);
     nextTokenIndex++;
-    return nextToken;
+    return currentToken;
   }
+  Token currentToken {TokenType::illegal, ""};
   int nextTokenIndex = 0;
   std::vector<Token> tokens;
 };
