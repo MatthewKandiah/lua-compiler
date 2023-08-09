@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "tokenFactory.h"
 #include <cctype>
 #include <iostream>
 #include <istream>
@@ -10,25 +11,25 @@ Token Lexer::getNextToken() {
   }
 
   if (!(*inputStreamPtr)) {
-    return Token(TokenType::eof, "");
+    return tokenFactory::eof();
   }
 
-  Token result = Token(TokenType::illegal, "");
+  Token result = tokenFactory::illegal();
   switch (lastCharacter) {
   case '=':
-    result = Token(TokenType::equals, "");
+    result = tokenFactory::equals();
     break;
   case '+':
-    result = Token(TokenType::plus, "");
+    result = tokenFactory::plus();
     break;
   case '-':
-    result = Token(TokenType::minus, "");
+    result = tokenFactory::minus();
     break;
   case '(':
-    result = Token(TokenType::leftBracket, "");
+    result = tokenFactory::leftBracket();
     break;
   case ')':
-    result = Token(TokenType::rightBracket, "");
+    result = tokenFactory::rightBracket();
     break;
   }
   if (result.type != TokenType::illegal) {
@@ -44,9 +45,9 @@ Token Lexer::getNextToken() {
       lastCharacter = inputStreamPtr->get();
     }
     if (buffer == std::string("local")) {
-      return Token(TokenType::local, "");
+      return tokenFactory::local();
     } else {
-      return Token(TokenType::identifier, buffer);
+      return tokenFactory::identifier(buffer);
     }
     buffer.clear();
   }
@@ -58,8 +59,8 @@ Token Lexer::getNextToken() {
       buffer.push_back(lastCharacter);
       lastCharacter = inputStreamPtr->get();
     }
-    return Token(TokenType::integer, buffer);
+    return tokenFactory::integer(buffer);
   }
 
-  return Token(TokenType::illegal, std::string(1, lastCharacter));
+  return tokenFactory::illegal();
 }
