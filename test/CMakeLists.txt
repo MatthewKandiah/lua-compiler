@@ -13,3 +13,4 @@ endmacro()
 
 add_test(lexer lexer.test.cpp)
 add_test(parser parser.test.cpp)
+add_test(watGenerator watGenerator.test.cpp)

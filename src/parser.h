@@ -34,9 +34,15 @@ private:
 
 class MockParser : public BaseParser {
 public:
-    MockParser() {
-        // TODO - work out how we're going to pass in our nodes and return them sensibly for tests
-    };
+    MockParser(std::vector<std::unique_ptr<AstExpressionNode>> v): expressionPtrs{std::move(v)} {};
+    std::vector<std::unique_ptr<AstExpressionNode>> expressionPtrs;
+    int expressionIndex = 0;
+    std::unique_ptr<AstExpressionNode> parseExpression() override {
+        if (expressionIndex >= expressionPtrs.size()) {
+            return NULL;
+        }
+        return std::move(expressionPtrs.at(expressionIndex++));
+    }
 };
 
 #endif // !PARSER_H
