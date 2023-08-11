@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <sstream>
-#include <sys/syslimits.h>
 #include <vector>
 
 #include "gtest/gtest.h"
