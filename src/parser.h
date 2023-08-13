@@ -12,6 +12,7 @@
 
 class BaseParser {
 public:
+  virtual ~BaseParser() = default;
   virtual std::unique_ptr<AstExpressionNode> parseExpression() = 0;
 };
 
@@ -34,15 +35,16 @@ private:
 
 class MockParser : public BaseParser {
 public:
-    MockParser(std::vector<std::unique_ptr<AstExpressionNode>> v): expressionPtrs{std::move(v)} {};
-    std::vector<std::unique_ptr<AstExpressionNode>> expressionPtrs;
-    int expressionIndex = 0;
-    std::unique_ptr<AstExpressionNode> parseExpression() override {
-        if (expressionIndex >= expressionPtrs.size()) {
-            return NULL;
-        }
-        return std::move(expressionPtrs.at(expressionIndex++));
+  MockParser(std::vector<std::unique_ptr<AstExpressionNode>> v)
+      : expressionPtrs{std::move(v)} {};
+  std::vector<std::unique_ptr<AstExpressionNode>> expressionPtrs;
+  int expressionIndex = 0;
+  std::unique_ptr<AstExpressionNode> parseExpression() override {
+    if (expressionIndex >= expressionPtrs.size()) {
+      return NULL;
     }
+    return std::move(expressionPtrs.at(expressionIndex++));
+  }
 };
 
 #endif // !PARSER_H
