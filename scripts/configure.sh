@@ -1,1 +1,1 @@
-cmake -S . -B build -GNinja
+cmake -S . -B build
