@@ -1,9 +1,15 @@
 #include "parser.h"
+#include <ostream>
+#include <string>
 class WatGenerator {
 public:
-  WatGenerator(Parser p): parser {std::move(p)} {};
+  WatGenerator(std::shared_ptr<std::ostream> o, std::unique_ptr<BaseParser> p)
+      : outStreamPtr{o}, parserPtr{std::move(p)} {};
+  void generate();
 
-  // damn, we're going to want to make BaseParser and MockParser to make testing this less painful
-  // probably going to need some sort of AST test factory too
-  Parser parser;
+private:
+  std::shared_ptr<std::ostream> outStreamPtr;
+  std::unique_ptr<BaseParser> parserPtr;
+  void generateInit();
+  void generateFinish();
 };

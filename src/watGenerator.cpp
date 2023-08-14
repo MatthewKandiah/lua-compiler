@@ -1,2 +1,9 @@
 #include "watGenerator.h"
-// Placeholder for when that day comes
+
+void WatGenerator::generate() {
+  generateInit();
+  generateFinish();
+}
+
+void WatGenerator::generateInit() { *outStreamPtr << "(module "; };
+void WatGenerator::generateFinish() { *outStreamPtr << ")"; };
